@@ -25,6 +25,7 @@ public class Message {
 
     private String text;
 
+    private Location location;
 
 
     /*
@@ -38,7 +39,6 @@ video	Video	Optional. Message is a video, information about the video
 voice	Voice	Optional. Message is a voice message, information about the file
 caption	String	Optional. Caption for the document, photo or video, 0-200 characters
 contact	Contact	Optional. Message is a shared contact, information about the contact
-location	Location	Optional. Message is a shared location, information about the location
 venue	Venue	Optional. Message is a venue, information about the venue
 new_chat_member	User	Optional. A new member was added to the group, information about them (this member may be the bot itself)
 left_chat_member	User	Optional. A member was removed from the group, information about them (this member may be the bot itself)

@@ -81,7 +81,7 @@ public class Telegram {
         post.setHeader(new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json"));
 
         try {
-            post.setEntity(new StringEntity(gson.toJson(requestBody)));
+            post.setEntity(new StringEntity(gson.toJson(requestBody), "UTF-8"));
 
         } catch (UnsupportedEncodingException e) {
             throw new TelegramException("Unable to construct request", e);

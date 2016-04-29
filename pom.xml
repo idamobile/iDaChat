@@ -9,7 +9,8 @@
 
     <modules>
         <module>abstract</module>
-        <module>chatbot-framework</module>
+        <module>bot</module>
+        <module>framework</module>
         <module>telegram-api</module>
     </modules>
 

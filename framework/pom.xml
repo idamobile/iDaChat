@@ -9,7 +9,7 @@
         <relativePath>../abstract</relativePath>
     </parent>
 
-    <artifactId>chatbot-framework</artifactId>
+    <artifactId>framework</artifactId>
     <packaging>jar</packaging>
 
     <properties>
