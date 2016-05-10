@@ -18,3 +18,7 @@
 
     - name: Start bot application
       shell: nohup java -jar ~/bot/bot.jar &
+      register: start_bot
+
+    - debug: msg="{{ start_bot.stdout }}"
+
