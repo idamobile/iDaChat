@@ -9,6 +9,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 @Slf4j
 public class Main {
+
     public static void main(String[] args) throws TelegramException {
         ApplicationContext context = new ClassPathXmlApplicationContext("com/idamobile/platform/chatbot/spring-context-bot.xml");
         Telegram telegram = context.getBean(Telegram.class);

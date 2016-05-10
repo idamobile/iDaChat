@@ -1,4 +1,6 @@
-.spring-context-token.xml
+# Ansible
+ansible/hosts
+*.retry
 
 # Eclipse
 .classpath

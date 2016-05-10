@@ -39,4 +39,11 @@
               <constructor-arg ref="dispatcherExecutor"/>
        </bean>
 
+       <bean class="com.idamobile.platform.light.core.ws.client.WsEndpointClientImpl">
+              <constructor-arg name="baseUrl" value="http://dev.idamob.ru/light/services/WsEndpointServiceFacade?wsdl"/>
+              <constructor-arg name="serviceEndpoint" value="WsEndpointServiceFacadeHttpSoap12Endpoint"/>
+              <constructor-arg name="serviceName" value="WsEndpointServiceFacade"/>
+       </bean>
+
+
 </beans>
