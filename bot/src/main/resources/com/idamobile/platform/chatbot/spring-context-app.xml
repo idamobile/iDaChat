@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+       <context:annotation-config/>
+       <!-- TODO: move to frameworks context -->
+       <context:component-scan base-package="com.github.zjor.telegram.bot.framework.service"/>
+
+       <bean id="botToken" class="java.lang.String">
+              <constructor-arg value="200885881:AAEb0OmQITvVXqAN0yoUqHMZXYyHG75uHwg"/>
+              <!--<constructor-arg value="149202901:AAEAp6KQT2G4Fb2yus-MpBOTdiNNr8bI1Ks"/>-->
+       </bean>
+
+       <bean class="com.github.zjor.telegram.bot.api.Telegram">
+              <constructor-arg name="token" value="#{botToken}"/>
+       </bean>
+
+       <bean id="dispatcherExecutor" class="java.util.concurrent.Executors" factory-method="newFixedThreadPool">
+              <constructor-arg value="3"/>
+       </bean>
+
+       <bean id="botDispatcher" class="com.github.zjor.telegram.bot.framework.dispatch.Dispatcher" init-method="start" destroy-method="stop">
+              <constructor-arg ref="dispatcherExecutor"/>
+       </bean>
+
+       <bean class="com.github.zjor.telegram.bot.framework.dispatch.ContextResolver">
+              <constructor-arg name="conversationDepth" value="2"/>
+       </bean>
+
+
+       <bean class="com.github.zjor.telegram.bot.framework.dispatch.UpdateHandler">
+              <constructor-arg name="handlers">
+                     <list>
+                            <bean class="com.idamobile.platform.chatbot.StartMessageHandler"/>
+                            <!--<bean class="com.idamobile.platform.chatbot.KeyboardMessageHandler"/>-->
+                     </list>
+              </constructor-arg>
+       </bean>
+
+       <!--<bean class="com.idamobile.platform.light.core.ws.client.WsEndpointClientImpl">-->
+              <!--<constructor-arg name="baseUrl" value="http://dev.idamob.ru/light/services/WsEndpointServiceFacade?wsdl"/>-->
+              <!--<constructor-arg name="serviceEndpoint" value="WsEndpointServiceFacadeHttpSoap12Endpoint"/>-->
+              <!--<constructor-arg name="serviceName" value="WsEndpointServiceFacade"/>-->
+       <!--</bean>-->
+
+
+</beans>

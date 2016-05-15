@@ -1,15 +1,15 @@
 package com.idamobile.platform.chatbot;
 
+import com.github.zjor.telegram.bot.api.dto.KeyboardButton;
+import com.github.zjor.telegram.bot.api.dto.SendMessageRequest;
+import com.github.zjor.telegram.bot.framework.dispatch.HandlingFailedException;
+import com.github.zjor.telegram.bot.framework.dispatch.MessageContext;
+import com.github.zjor.telegram.bot.framework.dispatch.MessageHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.idamobile.platform.telegram.bot.api.dto.KeyboardButton;
-import com.idamobile.platform.telegram.bot.api.dto.Message;
-import com.idamobile.platform.telegram.bot.api.dto.SendMessageRequest;
-import com.idamobile.platform.telegram.bot.framework.MessageHandler;
-import com.idamobile.platform.telegram.bot.framework.MessageHandlingCompletedException;
-import com.idamobile.platform.telegram.bot.framework.MessageHandlingFailedException;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 //import com.idamobile.platform.light.core.ws.client.WsEndpointClient;
@@ -35,25 +35,25 @@ public class KeyboardMessageHandler implements MessageHandler {
             {new KeyboardButton(KEY_RATES), new KeyboardButton(KEY_ATM, true)}
     };
 
-    @Override
-    public void apply(Message message) throws MessageHandlingCompletedException, MessageHandlingFailedException {
-
-        if (KEY_NEWS.equals(message.getText())) {
-            String responseText = "*Официальное сообщение пресс-службы КБ «ЛОКО-Банк» (АО)*\n\n" +
-                    "Уважаемые клиенты!\n" +
-                    "\n" +
-                    "В связи с обращениями третьих лиц по фактам заключения Банком договоров поручительства с юридическими лицами, привлекающими денежные средства для строительства в рамках Федерального закона от 30.12.2004 года № 214-ФЗ «Об участии в долевом строительстве» многоквартирных домов и иных объектов недвижимости и о внесении изменений в некоторые законодательные акты Российской Федерации», официально сообщаем, что Банк никогда не оказывал и не оказывает услуги по предоставлению подобных поручительств.";
-
-            complete(new SendMessageRequest(message.getFrom().getId(), responseText, SendMessageRequest.PARSE_MODE_MD));
-        } else if (KEY_CONTACTS.equals(message.getText())) {
-            completeWithText(message, getContacts());
-        } else if (KEY_RATES.equals(message.getText())) {
-            complete(new SendMessageRequest(message.getFrom().getId(), getExchangeRates(), SendMessageRequest.PARSE_MODE_MD));
-        } else if (KEY_ATM.equals(message.getText())) {
-            completeWithText(message, "Trying to find ATM close to: " + message.getLocation());
-        }
-
-    }
+//    @Override
+//    public void apply(Message message) throws MessageHandlingCompletedException, MessageHandlingFailedException {
+//
+//        if (KEY_NEWS.equals(message.getText())) {
+//            String responseText = "*Официальное сообщение пресс-службы КБ «ЛОКО-Банк» (АО)*\n\n" +
+//                    "Уважаемые клиенты!\n" +
+//                    "\n" +
+//                    "В связи с обращениями третьих лиц по фактам заключения Банком договоров поручительства с юридическими лицами, привлекающими денежные средства для строительства в рамках Федерального закона от 30.12.2004 года № 214-ФЗ «Об участии в долевом строительстве» многоквартирных домов и иных объектов недвижимости и о внесении изменений в некоторые законодательные акты Российской Федерации», официально сообщаем, что Банк никогда не оказывал и не оказывает услуги по предоставлению подобных поручительств.";
+//
+//            complete(new SendMessageRequest(message.getFrom().getId(), responseText, SendMessageRequest.PARSE_MODE_MD));
+//        } else if (KEY_CONTACTS.equals(message.getText())) {
+//            completeWithText(message, getContacts());
+//        } else if (KEY_RATES.equals(message.getText())) {
+//            complete(new SendMessageRequest(message.getFrom().getId(), getExchangeRates(), SendMessageRequest.PARSE_MODE_MD));
+//        } else if (KEY_ATM.equals(message.getText())) {
+//            completeWithText(message, "Trying to find ATM close to: " + message.getLocation());
+//        }
+//
+//    }
 
     private String getLocalizedValue(String value) {
         if (StringUtils.isEmpty(value)) {
@@ -100,5 +100,10 @@ public class KeyboardMessageHandler implements MessageHandler {
 //            });
 //        }
         return rates.toString();
+    }
+
+    @Override
+    public List<SendMessageRequest> handle(MessageContext messageContext) throws HandlingFailedException {
+        return null;
     }
 }

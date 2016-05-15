@@ -24,6 +24,18 @@
             <!--</dependency>-->
 
             <dependency>
+                <groupId>com.github.zjor.telegram</groupId>
+                <artifactId>bot-api</artifactId>
+                <version>1.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.zjor.telegram.bot.framework</groupId>
+                <artifactId>telegram-framework-core</artifactId>
+                <version>1.1-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>1.14.8</version>
@@ -260,6 +272,12 @@
             <id>ida-maven-repository</id>
             <name>iDa Maven Nexus Repo</name>
             <url>http://nexus.idamob.ru/content/repositories/releases/</url>
+        </repository>
+
+        <repository>
+            <id>zjor-bintray</id>
+            <name>zjor BinTray Repo</name>
+            <url>https://dl.bintray.com/zjor/maven/</url>
         </repository>
     </repositories>
 </project>

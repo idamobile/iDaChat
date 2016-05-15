@@ -1,8 +1,8 @@
 package com.idamobile.platform.chatbot;
 
-import com.idamobile.platform.telegram.bot.api.Telegram;
-import com.idamobile.platform.telegram.bot.api.TelegramException;
-import com.idamobile.platform.telegram.bot.api.dto.User;
+import com.github.zjor.telegram.bot.api.Telegram;
+import com.github.zjor.telegram.bot.api.TelegramException;
+import com.github.zjor.telegram.bot.api.dto.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -11,7 +11,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class Main {
 
     public static void main(String[] args) throws TelegramException {
-        ApplicationContext context = new ClassPathXmlApplicationContext("com/idamobile/platform/chatbot/spring-context-bot.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext(
+                "classpath*:com/github/zjor/telegram/bot/framework/**/spring-context-*.xml",
+                "com/idamobile/platform/chatbot/spring-context-*.xml"
+                );
         Telegram telegram = context.getBean(Telegram.class);
 
         User botInfo = telegram.getMe();
