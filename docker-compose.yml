@@ -1,0 +1,15 @@
+version: '2'
+services:
+  bot:
+    image: java:8-jre
+    command: java -jar /usr/src/myapp/bot.jar
+    volumes:
+     - ./bot/target:/usr/src/myapp
+    depends_on:
+     - db
+  db:
+    image: postgres:9.4
+    environment:
+      POSTGRES_DB: ida_bot
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: s3cr3t
