@@ -28,10 +28,10 @@
             <artifactId>telegram-framework-core</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>com.idamobile.platform</groupId>-->
-            <!--<artifactId>light.ws-client</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.idamobile.platform</groupId>
+            <artifactId>light.ws-client</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
