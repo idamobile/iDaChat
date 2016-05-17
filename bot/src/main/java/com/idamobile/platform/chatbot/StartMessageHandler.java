@@ -1,6 +1,5 @@
 package com.idamobile.platform.chatbot;
 
-import com.github.zjor.telegram.bot.api.dto.ReplyKeyboardMarkup;
 import com.github.zjor.telegram.bot.api.dto.SendMessageRequest;
 import com.github.zjor.telegram.bot.framework.dispatch.HandlingFailedException;
 import com.github.zjor.telegram.bot.framework.dispatch.MessageContext;
@@ -24,7 +23,7 @@ public class StartMessageHandler extends AbstractMessageHandler {
             //TODO: read message from resources
             //TODO: support languages
             String response = MessageFormat.format(GREETING_MESSAGE, context.getUser().getFirstName());
-            return replyWithText(context, response, new ReplyKeyboardMarkup(Keyboard.KEYBOARD, true, true, false));
+            return replyWithText(context, response, Keyboard.KEYBOARD);
         }
         return Collections.emptyList();
     }
