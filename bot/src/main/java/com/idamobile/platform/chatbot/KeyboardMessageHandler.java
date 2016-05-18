@@ -115,8 +115,8 @@ public class KeyboardMessageHandler extends AbstractMessageHandler {
     }
 
     public String getNearestLocation() {
-        client.getNearestLocation()
-
+//        client.getNearestLocation()
+        return null;
     }
 
 

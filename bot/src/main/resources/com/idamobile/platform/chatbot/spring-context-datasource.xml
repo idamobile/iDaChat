@@ -9,9 +9,13 @@
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="org.postgresql.Driver"/>
-        <property name="url" value="jdbc:postgresql://db:5432/ida_bot"/>
-        <property name="username" value="docker"/>
-        <property name="password" value="s3cr3t"/>
+        <property name="url" value="jdbc:postgresql://localhost:5432/ida_bot"/>
+        <property name="username" value="test"/>
+        <property name="password" value="testpassword"/>
+
+        <!--<property name="url" value="jdbc:postgresql://db:5432/ida_bot"/>-->
+        <!--<property name="username" value="docker"/>-->
+        <!--<property name="password" value="s3cr3t"/>-->
     </bean>
 
     <util:list id="modelPackages" value-type="java.lang.String">

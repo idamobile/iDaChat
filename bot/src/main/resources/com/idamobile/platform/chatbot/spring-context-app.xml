@@ -9,8 +9,7 @@
        <context:component-scan base-package="com.github.zjor.telegram.bot.framework.service"/>
 
        <bean id="botToken" class="java.lang.String">
-              <constructor-arg value="200885881:AAEb0OmQITvVXqAN0yoUqHMZXYyHG75uHwg"/>
-              <!--<constructor-arg value="149202901:AAEAp6KQT2G4Fb2yus-MpBOTdiNNr8bI1Ks"/>-->
+              <constructor-arg value="#{systemEnvironment['IDA_CHAT_BOT_TOKEN']}"/>
        </bean>
 
        <bean class="com.github.zjor.telegram.bot.api.Telegram">
@@ -34,16 +33,16 @@
               <constructor-arg name="handlers">
                      <list>
                             <bean class="com.idamobile.platform.chatbot.StartMessageHandler"/>
-                            <!--<bean class="com.idamobile.platform.chatbot.KeyboardMessageHandler"/>-->
+                            <bean class="com.idamobile.platform.chatbot.KeyboardMessageHandler"/>
                      </list>
               </constructor-arg>
        </bean>
 
-       <!--<bean class="com.idamobile.platform.light.core.ws.client.WsEndpointClientImpl">-->
-              <!--<constructor-arg name="baseUrl" value="http://dev.idamob.ru/light/services/WsEndpointServiceFacade?wsdl"/>-->
-              <!--<constructor-arg name="serviceEndpoint" value="WsEndpointServiceFacadeHttpSoap12Endpoint"/>-->
-              <!--<constructor-arg name="serviceName" value="WsEndpointServiceFacade"/>-->
-       <!--</bean>-->
+       <bean class="com.idamobile.platform.light.core.ws.client.WsEndpointClientImpl">
+              <constructor-arg name="baseUrl" value="http://dev.idamob.ru/light/services/WsEndpointServiceFacade?wsdl"/>
+              <constructor-arg name="serviceEndpoint" value="WsEndpointServiceFacadeHttpSoap12Endpoint"/>
+              <constructor-arg name="serviceName" value="WsEndpointServiceFacade"/>
+       </bean>
 
 
 </beans>

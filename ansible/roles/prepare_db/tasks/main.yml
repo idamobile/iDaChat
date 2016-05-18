@@ -1,0 +1,10 @@
+---
+- name: Create postgresql user
+  become: yes
+  become_user: postgres
+  postgresql_user: name=test password=testpassword role_attr_flags=CREATEDB,NOSUPERUSER
+
+- name: Create postgresql database
+  become: yes
+  become_user: postgres
+  postgresql_db: name=ida_bot owner=test encoding='UTF-8'
