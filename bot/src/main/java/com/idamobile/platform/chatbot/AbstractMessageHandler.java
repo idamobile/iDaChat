@@ -22,6 +22,12 @@ public abstract class AbstractMessageHandler implements MessageHandler {
         return Collections.singletonList(req);
     }
 
+    protected List<SendMessageRequest> replyWithText(MessageContext context, String text, String parseMode, ReplyKeyboardMarkup keyboard) {
+        SendMessageRequest req = new SendMessageRequest(context.getUser().getTelegramId(), text, parseMode);
+        req.setReplyMarkup(keyboard);
+        return Collections.singletonList(req);
+    }
+
     protected boolean checkPreviousMessage(MessageContext context, Predicate<String> predicate) {
         return checkNth(context, predicate, 0);
     }

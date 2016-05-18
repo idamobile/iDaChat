@@ -13,9 +13,12 @@ import com.idamobile.platform.light.core.ws.dto.news.WsGetNewsResponseDTO;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
+import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,26 +35,6 @@ public class KeyboardMessageHandler extends AbstractMessageHandler {
     @Inject
     private WsEndpointClient client;
 
-
-//    @Override
-//    public void apply(Message message) throws MessageHandlingCompletedException, MessageHandlingFailedException {
-//
-//        if (KEY_NEWS.equals(message.getText())) {
-//            String responseText = "*Официальное сообщение пресс-службы КБ «ЛОКО-Банк» (АО)*\n\n" +
-//                    "Уважаемые клиенты!\n" +
-//                    "\n" +
-//                    "В связи с обращениями третьих лиц по фактам заключения Банком договоров поручительства с юридическими лицами, привлекающими денежные средства для строительства в рамках Федерального закона от 30.12.2004 года № 214-ФЗ «Об участии в долевом строительстве» многоквартирных домов и иных объектов недвижимости и о внесении изменений в некоторые законодательные акты Российской Федерации», официально сообщаем, что Банк никогда не оказывал и не оказывает услуги по предоставлению подобных поручительств.";
-//
-//            complete(new SendMessageRequest(message.getFrom().getId(), responseText, SendMessageRequest.PARSE_MODE_MD));
-//        } else if (KEY_CONTACTS.equals(message.getText())) {
-//            completeWithText(message, getContacts());
-//        } else if (KEY_RATES.equals(message.getText())) {
-//            complete(new SendMessageRequest(message.getFrom().getId(), getExchangeRates(), SendMessageRequest.PARSE_MODE_MD));
-//        } else if (KEY_ATM.equals(message.getText())) {
-//            completeWithText(message, "Trying to find ATM close to: " + message.getLocation());
-//        }
-//
-//    }
 
     private String getLocalizedValue(String value) {
         if (StringUtils.isEmpty(value)) {
@@ -90,12 +73,14 @@ public class KeyboardMessageHandler extends AbstractMessageHandler {
             }
             index.get(rate.getType()).add(rate);
         });
-        StringBuilder rates = new StringBuilder();
+        DateFormat dateFormat = new SimpleDateFormat("dd.mm.yyyy");
+        StringBuilder rates = new StringBuilder("&#128197; Данные актуальны на ").append(dateFormat.format(new Date())).append("\n");
         for (String type : index.keySet()) {
-            rates.append(names.get(type)).append('\n');
+            rates.append("\n[ ").append(names.get(type)).append(" ]\n");
             index.get(type).stream().forEach(r -> {
-                rates.append('\t').append(MessageFormat.format("{0}/{1} {2} {3}", r.getFirstCurrency(), r.getSecondCurrency(), r.getBuy(), r.getSell()));
-                rates.append('\n');
+                rates.append(MessageFormat.format("<b>{0} &#8596; {1}</b>\n", r.getFirstCurrency(), r.getSecondCurrency()));
+                rates.append("  &#8226; Покупка:  ").append(r.getBuy()).append('\n');
+                rates.append("  &#8226; Продажа:  ").append(r.getSell()).append('\n');
             });
         }
         return rates.toString();
@@ -132,7 +117,7 @@ public class KeyboardMessageHandler extends AbstractMessageHandler {
         } else if (Keyboard.KEY_CONTACTS.equals(text)) {
             return replyWithText(context, getContacts(), Keyboard.KEYBOARD);
         } else if (Keyboard.KEY_RATES.equals(text)) {
-            return replyWithText(context, getExchangeRates(), Keyboard.KEYBOARD);
+            return replyWithText(context, getExchangeRates(), SendMessageRequest.PARSE_MODE_HTML, Keyboard.KEYBOARD);
         } else if (Keyboard.KEY_NEWS.equals(text)) {
             return replyWithText(context, getLastNews(), Keyboard.KEYBOARD);
         }
