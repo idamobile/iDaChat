@@ -25,6 +25,7 @@ public abstract class AbstractMessageHandler implements MessageHandler {
     protected List<SendMessageRequest> replyWithText(MessageContext context, String text, String parseMode, ReplyKeyboardMarkup keyboard) {
         SendMessageRequest req = new SendMessageRequest(context.getUser().getTelegramId(), text, parseMode);
         req.setReplyMarkup(keyboard);
+        req.setDisableWebPageView(true);
         return Collections.singletonList(req);
     }
 

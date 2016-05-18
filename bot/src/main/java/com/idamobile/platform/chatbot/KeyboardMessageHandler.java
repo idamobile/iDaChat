@@ -57,8 +57,12 @@ public class KeyboardMessageHandler extends AbstractMessageHandler {
         }
         StringBuilder contacts = new StringBuilder();
         Arrays.stream(cs).forEach(c -> {
-            contacts.append(MessageFormat.format("[{0}] {1}: {2}", c.getType(), getLocalizedValue(c.getName()), getLocalizedValue(c.getValue())));
-            contacts.append('\n');
+            contacts.append("<b>").append(getLocalizedValue(c.getName())).append("</b>\n");
+            if ("PHONE".equals(c.getType())) {
+                contacts.append("&#128222; ");
+            }
+            contacts.append(getLocalizedValue(c.getValue())).append("\n\n");
+
         });
         return contacts.toString();
     }
@@ -91,12 +95,17 @@ public class KeyboardMessageHandler extends AbstractMessageHandler {
         StringBuilder news = new StringBuilder();
         Arrays.stream(res.getNews()).forEach(n -> {
             news
-                    .append(n.getPreview())
+                    .append(sanitize(n.getPreview()))
                     .append('\n')
                     .append(n.getUrl()).append('\n')
                     .append(n.getCreationDate());
         });
         return news.toString();
+    }
+
+    private String sanitize(String content) {
+        content = content.replaceAll("</p><p>", "\n\n");
+        return content.replaceAll("<.*?>", "");
     }
 
     public String getNearestLocation() {
@@ -115,11 +124,11 @@ public class KeyboardMessageHandler extends AbstractMessageHandler {
             return replyWithText(context, null, Keyboard.KEYBOARD);
 
         } else if (Keyboard.KEY_CONTACTS.equals(text)) {
-            return replyWithText(context, getContacts(), Keyboard.KEYBOARD);
+            return replyWithText(context, getContacts(), SendMessageRequest.PARSE_MODE_HTML, Keyboard.KEYBOARD);
         } else if (Keyboard.KEY_RATES.equals(text)) {
             return replyWithText(context, getExchangeRates(), SendMessageRequest.PARSE_MODE_HTML, Keyboard.KEYBOARD);
         } else if (Keyboard.KEY_NEWS.equals(text)) {
-            return replyWithText(context, getLastNews(), Keyboard.KEYBOARD);
+            return replyWithText(context, getLastNews(), SendMessageRequest.PARSE_MODE_HTML, Keyboard.KEYBOARD);
         }
 
         return Collections.emptyList();
