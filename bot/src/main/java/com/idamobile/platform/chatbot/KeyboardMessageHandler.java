@@ -1,15 +1,21 @@
 package com.idamobile.platform.chatbot;
 
-import com.github.zjor.telegram.bot.api.dto.SendMessageRequest;
+import com.github.zjor.telegram.bot.api.dto.Location;
+import com.github.zjor.telegram.bot.api.dto.Message;
+import com.github.zjor.telegram.bot.api.dto.ParseMode;
+import com.github.zjor.telegram.bot.api.dto.SendLocationRequest;
+import com.github.zjor.telegram.bot.framework.dispatch.AbstractMessageHandler;
 import com.github.zjor.telegram.bot.framework.dispatch.HandlingFailedException;
-import com.github.zjor.telegram.bot.framework.dispatch.MessageContext;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.idamobile.platform.light.core.ws.client.WsEndpointClient;
 import com.idamobile.platform.light.core.ws.dto.WsCurrencyRateDTO;
 import com.idamobile.platform.light.core.ws.dto.contacts.WsContactDTO;
+import com.idamobile.platform.light.core.ws.dto.locations.WsGetNearestLocationRequestDTO;
+import com.idamobile.platform.light.core.ws.dto.locations.WsLocationDTO;
 import com.idamobile.platform.light.core.ws.dto.news.WsGetNewsRequestDTO;
 import com.idamobile.platform.light.core.ws.dto.news.WsGetNewsResponseDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -17,7 +23,6 @@ import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,9 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 
-//TODO: it's a temporary stub keyboard handler
-//should be replaced with separate class per functionality
-
+@Slf4j
 public class KeyboardMessageHandler extends AbstractMessageHandler {
 
     public static final String I18N = "i18n";
@@ -108,29 +111,48 @@ public class KeyboardMessageHandler extends AbstractMessageHandler {
         return content.replaceAll("<.*?>", "");
     }
 
-    public String getNearestLocation() {
-//        client.getNearestLocation()
-        return null;
-    }
+    public void handleNearestAtm(Message message) {
+        int userId = message.getFrom().getId();
+        if (message.getLocation() == null) {
+            replyWithText(userId, "Sorry, I don't know your location", Keyboard.KEYBOARD);
+        } else {
+            Location l = message.getLocation();
+            try {
+                WsLocationDTO res = client.getNearestLocation(new WsGetNearestLocationRequestDTO(l.getLatitude(), l.getLongitude())).getLocation();
+                getTelegram().sendLocation(new SendLocationRequest("" + userId, res.getLat(), res.getLng(), null, null, Keyboard.KEYBOARD));
 
+                StringBuilder info = new StringBuilder("<b>" + getLocalizedValue(res.getName()) + "</b>\n")
+                        .append('\n').append("[ Address ]")
+                        .append('\n').append(getLocalizedValue(res.getAddress()))
+                        .append("\n\n[ Working hours ]")
+                        .append('\n').append(getLocalizedValue(res.getOperationTime()));
+                replyWithText(userId, info.toString(), ParseMode.HTML, Keyboard.KEYBOARD);
+            } catch (Throwable t) {
+                log.error("Failed to get nearest location: " + t.getMessage(), t);
+                replyWithText(userId, "Sorry, I couldn't get the nearest location: " + t.getMessage());
+            }
+        }
+    }
 
 
     @Override
-    public List<SendMessageRequest> handle(MessageContext context) throws HandlingFailedException {
-        String text = context.getCurrentMessage().getText();
+    public boolean handle(Message message) throws HandlingFailedException {
+        String text = message.getText();
+        int userId = message.getFrom().getId();
 
-        if (Keyboard.KEY_ATM.equals(text)) {
-            //TODO: support location in the incoming message &
-            return replyWithText(context, null, Keyboard.KEYBOARD);
-
+        if (Keyboard.KEY_ATM.equals(text) || message.getLocation() != null) {
+            handleNearestAtm(message);
         } else if (Keyboard.KEY_CONTACTS.equals(text)) {
-            return replyWithText(context, getContacts(), SendMessageRequest.PARSE_MODE_HTML, Keyboard.KEYBOARD);
+            replyWithText(userId, getContacts(), ParseMode.HTML, Keyboard.KEYBOARD);
         } else if (Keyboard.KEY_RATES.equals(text)) {
-            return replyWithText(context, getExchangeRates(), SendMessageRequest.PARSE_MODE_HTML, Keyboard.KEYBOARD);
+            replyWithText(userId, getExchangeRates(), ParseMode.HTML, Keyboard.KEYBOARD);
         } else if (Keyboard.KEY_NEWS.equals(text)) {
-            return replyWithText(context, getLastNews(), SendMessageRequest.PARSE_MODE_HTML, Keyboard.KEYBOARD);
+            replyWithText(userId, getLastNews(), ParseMode.HTML, Keyboard.KEYBOARD);
+        } else {
+            return false;
         }
 
-        return Collections.emptyList();
+        return true;
     }
+
 }
