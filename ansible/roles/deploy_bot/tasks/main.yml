@@ -5,8 +5,8 @@
 - name: Copy built jar
   copy: src=../bot/target/bot.jar dest=~/bot/bot.jar
 
-#    - name: Copy libs
-#      copy: src=../bot/target/lib dest=~/bot
+- name: Copy libs
+  copy: src=../bot/target/lib dest=~/bot
 
 - name: Kill existing instance of the app
   become: yes

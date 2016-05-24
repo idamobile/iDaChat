@@ -28,6 +28,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 
 @Slf4j
@@ -118,7 +124,10 @@ public class KeyboardMessageHandler extends AbstractMessageHandler {
         } else {
             Location l = message.getLocation();
             try {
-                WsLocationDTO res = client.getNearestLocation(new WsGetNearestLocationRequestDTO(l.getLatitude(), l.getLongitude())).getLocation();
+                WsLocationDTO res = submit(
+                        () -> client.getNearestLocation(new WsGetNearestLocationRequestDTO(l.getLatitude(), l.getLongitude())).getLocation(),
+                        getProgressNotifier(userId), 1000);
+
                 getTelegram().sendLocation(new SendLocationRequest("" + userId, res.getLat(), res.getLng(), null, null, Keyboard.KEYBOARD));
 
                 StringBuilder info = new StringBuilder("<b>" + getLocalizedValue(res.getName()) + "</b>\n")
@@ -141,18 +150,73 @@ public class KeyboardMessageHandler extends AbstractMessageHandler {
         int userId = message.getFrom().getId();
 
         if (Keyboard.KEY_ATM.equals(text) || message.getLocation() != null) {
+
             handleNearestAtm(message);
+
         } else if (Keyboard.KEY_CONTACTS.equals(text)) {
-            replyWithText(userId, getContacts(), ParseMode.HTML, Keyboard.KEYBOARD);
+
+            String contacts = submit(() -> getContacts(), getProgressNotifier(userId), 1000);
+            replyWithText(userId, contacts, ParseMode.HTML, Keyboard.KEYBOARD);
+
         } else if (Keyboard.KEY_RATES.equals(text)) {
-            replyWithText(userId, getExchangeRates(), ParseMode.HTML, Keyboard.KEYBOARD);
+
+            String rates = submit(() -> getExchangeRates(), getProgressNotifier(userId), 1000);
+            replyWithText(userId, rates, ParseMode.HTML, Keyboard.KEYBOARD);
+
         } else if (Keyboard.KEY_NEWS.equals(text)) {
-            replyWithText(userId, getLastNews(), ParseMode.HTML, Keyboard.KEYBOARD);
+
+            String news = submit(() -> getLastNews(), getProgressNotifier(userId), 1000);
+            replyWithText(userId, news, ParseMode.HTML, Keyboard.KEYBOARD);
+
         } else {
             return false;
         }
 
         return true;
+    }
+
+    private Consumer<Integer> getProgressNotifier(int userId) {
+        String[] phrases = new String[]{
+                "Wait a second, please...",
+                "I'm still thinking...",
+                "Seems that it takes a bit longer...",
+                "Almost there!"
+        };
+        return n -> replyWithText(userId, phrases[n % phrases.length] + " #" + (n + 1));
+    }
+
+    /**
+     * Submits task asynchronously, checks its status each interval in millis,
+     * invokes notifier with number of verifications performed
+     *
+     * @param task
+     * @param notifier
+     * @param interval
+     */
+    public <T> T submit(Callable<T> task, Consumer<Integer> notifier, long interval) throws HandlingFailedException {
+        ExecutorService exec = Executors.newFixedThreadPool(2);
+        Future<T> future = exec.submit(task);
+        exec.submit(() -> {
+            int n = 0;
+            do {
+                try {
+                    Thread.sleep(interval);
+                    if (!future.isDone()) {
+                        notifier.accept(n++);
+                    }
+                } catch (InterruptedException e) {
+                    log.error(e.getMessage(), e);
+                }
+            } while (!future.isDone());
+        });
+        exec.shutdown();
+        try {
+            exec.awaitTermination(15, TimeUnit.SECONDS);
+            return future.get();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new HandlingFailedException();
+        }
     }
 
 }
