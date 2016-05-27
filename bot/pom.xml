@@ -157,6 +157,17 @@
         </dependency>
         <!-- /Apache Axis-->
 
+        <!-- Apache CXF -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+        </dependency>
+        <!-- /Apache CXF -->
+
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>

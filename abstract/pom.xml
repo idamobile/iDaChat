@@ -12,6 +12,7 @@
         <spring.version>4.1.5.RELEASE</spring.version>
         <hibernate.version>4.3.6.Final</hibernate.version>
         <axis.version>1.6.2</axis.version>
+        <cxf.version>2.7.6</cxf.version>
     </properties>
 
     <dependencyManagement>
@@ -216,6 +217,12 @@
                 <groupId>org.apache.axis2</groupId>
                 <artifactId>axis2-kernel</artifactId>
                 <version>${axis.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.ws.commons.schema</groupId>
+                        <artifactId>XmlSchema</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.axis2</groupId>
@@ -240,6 +247,20 @@
                 </exclusions>
             </dependency>
             <!-- /Apache Axis-->
+
+            <!-- Apache CXF -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <!-- /Apache CXF -->
+
 
             <dependency>
                 <groupId>junit</groupId>
