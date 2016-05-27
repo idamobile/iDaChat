@@ -1,10 +1,14 @@
 version: '2'
 services:
   bot:
-    image: java:8-jre
-    command: java -jar /usr/src/myapp/bot.jar
+    image: tomcat:7-jre8
+    environment:
+      IDA_CHAT_BOT_TOKEN: "200885881:AAEb0OmQITvVXqAN0yoUqHMZXYyHG75uHwg"
+    ports:
+     - "7001:8080"
     volumes:
-     - ./bot/target:/usr/src/myapp
+     - ./bot/target/bot.war:/usr/local/tomcat/webapps/bot.war
+     - ./bot/server-docker.xml:/usr/local/tomcat/conf/server.xml
     depends_on:
      - db
   db:
