@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
 
     <bean id="sqlDialect" class="java.lang.String">
         <constructor-arg value="org.hibernate.dialect.PostgreSQL9Dialect"/>
     </bean>
 
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="org.postgresql.Driver"/>
-        <property name="url" value="jdbc:postgresql://localhost:5432/ida_bot"/>
-        <property name="username" value="test"/>
-        <property name="password" value="testpassword"/>
-
-        <!--<property name="url" value="jdbc:postgresql://db:5432/ida_bot"/>-->
-        <!--<property name="username" value="docker"/>-->
-        <!--<property name="password" value="s3cr3t"/>-->
-    </bean>
+    <jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/dataSource" expected-type="javax.sql.DataSource"/>
 
     <util:list id="modelPackages" value-type="java.lang.String">
         <value>com.github.zjor.**.model</value>
