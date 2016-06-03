@@ -14,7 +14,7 @@
                   maxActive="20" maxIdle="10" maxWait="-1"
                 />
 
-        <Environment name="botToken" value="200885881:AAEb0OmQITvVXqAN0yoUqHMZXYyHG75uHwg" type="java.lang.String"/>
+        <Environment name="botToken" value="149202901:AAEAp6KQT2G4Fb2yus-MpBOTdiNNr8bI1Ks" type="java.lang.String"/>
 
         <Resource name="UserDatabase" auth="Container"
                   type="org.apache.catalina.UserDatabase"
@@ -36,7 +36,7 @@
                 <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase"/>
             </Realm>
 
-            <Host name="localhost" appBase="../webapps" unpackWARs="true" autoDeploy="true" createDirs="true">
+            <Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true" createDirs="true">
                 <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
                        prefix="localhost_access_log." suffix=".txt"
                        pattern="%h %l %u %t &quot;%r&quot; %s %b"/>

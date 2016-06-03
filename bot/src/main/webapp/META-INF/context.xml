@@ -1,4 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Context>
     <ResourceLink name="jdbc/dataSource" global="jdbc/dataSource" type="javax.sql.DataSource"/>
+
+    <ResourceLink name="botToken" global="botToken" type="java.lang.String"/>
 </Context>

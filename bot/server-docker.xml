@@ -14,6 +14,8 @@
                   maxActive="20" maxIdle="10" maxWait="-1"
                 />
 
+        <Environment name="botToken" value="200885881:AAEb0OmQITvVXqAN0yoUqHMZXYyHG75uHwg" type="java.lang.String"/>
+
         <Resource name="UserDatabase" auth="Container"
                   type="org.apache.catalina.UserDatabase"
                   description="User database that can be updated and saved"

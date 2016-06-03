@@ -2,13 +2,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
+
+       <jee:jndi-lookup id="botToken" jndi-name="java:comp/env/botToken" expected-type="java.lang.String"/>
 
        <context:annotation-config/>
-
-       <bean id="botToken" class="java.lang.String">
-              <constructor-arg value="#{systemEnvironment['IDA_CHAT_BOT_TOKEN']}"/>
-       </bean>
 
        <bean class="com.github.zjor.telegram.bot.api.Telegram">
               <constructor-arg name="token" value="#{botToken}"/>

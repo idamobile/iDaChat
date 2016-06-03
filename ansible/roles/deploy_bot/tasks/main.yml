@@ -1,22 +1,27 @@
 ---
-- name: Ensure bot directory exist
-  file: path=~/bot state=directory recurse=yes
-
-- name: Copy built jar
-  copy: src=../bot/target/bot.jar dest=~/bot/bot.jar
-
-- name: Copy libs
-  copy: src=../bot/target/lib dest=~/bot
-
-- name: Kill existing instance of the app
+- name: Stop tomcat7 service
+  service: name=tomcat7 state=stopped
   become: yes
   become_method: sudo
-  shell: pkill -f bot
-  ignore_errors: yes
 
-- name: Start bot application
-  shell: nohup java -jar ~/bot/bot.jar &
-  register: start_bot
+- name: Copy server.xml
+  copy: src=../bot/server-production.xml dest=/etc/tomcat7/server.xml mode=0644
+  become: yes
+  become_method: sudo
 
-- debug: msg="{{ start_bot.stdout }}"
+- name: Remove old deployment directory
+  file: dest=/var/lib/tomcat7/webapps/bot state=absent
+  become: yes
+  become_method: sudo
+
+- name: Copy new WAR file
+  copy: src=../bot/target/bot.war dest=/var/lib/tomcat7/webapps owner=tomcat7 mode=0644
+  become: yes
+  become_method: sudo
+
+- name: Start tomcat7 service
+  service: name=tomcat7 state=started
+  become: yes
+  become_method: sudo
+
 
