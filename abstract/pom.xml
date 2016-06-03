@@ -13,6 +13,7 @@
         <hibernate.version>4.3.6.Final</hibernate.version>
         <axis.version>1.6.2</axis.version>
         <cxf.version>2.7.6</cxf.version>
+        <bot.api.version>1.9</bot.api.version>
     </properties>
 
     <dependencyManagement>
@@ -33,7 +34,7 @@
             <dependency>
                 <groupId>com.github.zjor.telegram</groupId>
                 <artifactId>bot-api</artifactId>
-                <version>1.7</version>
+                <version>${bot.api.version}</version>
             </dependency>
 
             <dependency>

@@ -3,11 +3,9 @@ package com.idamobile.platform.chatbot;
 import com.github.zjor.telegram.bot.api.dto.Location;
 import com.github.zjor.telegram.bot.api.dto.Message;
 import com.github.zjor.telegram.bot.api.dto.ParseMode;
-import com.github.zjor.telegram.bot.api.dto.SendLocationRequest;
+import com.github.zjor.telegram.bot.api.dto.methods.SendLocation;
 import com.github.zjor.telegram.bot.framework.dispatch.AbstractMessageHandler;
 import com.github.zjor.telegram.bot.framework.dispatch.HandlingFailedException;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.idamobile.platform.light.core.ws.client.WsEndpointClient;
 import com.idamobile.platform.light.core.ws.dto.WsCurrencyRateDTO;
 import com.idamobile.platform.light.core.ws.dto.contacts.WsContactDTO;
@@ -16,7 +14,6 @@ import com.idamobile.platform.light.core.ws.dto.locations.WsLocationDTO;
 import com.idamobile.platform.light.core.ws.dto.news.WsGetNewsRequestDTO;
 import com.idamobile.platform.light.core.ws.dto.news.WsGetNewsResponseDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import java.text.DateFormat;
@@ -35,29 +32,14 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import static com.idamobile.platform.chatbot.util.LocalizationUtils.getLocalizedValue;
+
 
 @Slf4j
 public class KeyboardMessageHandler extends AbstractMessageHandler {
 
-    public static final String I18N = "i18n";
-
     @Inject
     private WsEndpointClient client;
-
-
-    private String getLocalizedValue(String value) {
-        if (StringUtils.isEmpty(value)) {
-            return value;
-        }
-        if (value.startsWith(I18N)) {
-            String json = value.substring(I18N.length());
-            Map<String, String> values = new Gson().fromJson(json, new TypeToken<Map<String, String>>() {
-            }.getType());
-            return values.get("ru");
-        } else {
-            return value;
-        }
-    }
 
     private String getContacts() {
         WsContactDTO[] cs = client.getContacts().getContacts();
@@ -128,7 +110,7 @@ public class KeyboardMessageHandler extends AbstractMessageHandler {
                         () -> client.getNearestLocation(new WsGetNearestLocationRequestDTO(l.getLatitude(), l.getLongitude())).getLocation(),
                         getProgressNotifier(userId), 1000);
 
-                getTelegram().sendLocation(new SendLocationRequest("" + userId, res.getLat(), res.getLng(), null, null, Keyboard.KEYBOARD));
+                getTelegram().sendLocation(new SendLocation("" + userId, res.getLat(), res.getLng(), Keyboard.KEYBOARD));
 
                 StringBuilder info = new StringBuilder("<b>" + getLocalizedValue(res.getName()) + "</b>\n")
                         .append('\n').append("[ Address ]")

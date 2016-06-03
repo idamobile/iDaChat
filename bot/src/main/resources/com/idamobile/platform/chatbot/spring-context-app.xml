@@ -27,6 +27,7 @@
                      <list>
                             <bean class="com.idamobile.platform.chatbot.StartMessageHandler"/>
                             <bean class="com.idamobile.platform.chatbot.KeyboardMessageHandler"/>
+                            <bean class="com.idamobile.platform.chatbot.BannerMessageHandler"/>
                      </list>
               </constructor-arg>
        </bean>

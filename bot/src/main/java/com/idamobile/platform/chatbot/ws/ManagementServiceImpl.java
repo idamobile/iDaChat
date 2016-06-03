@@ -2,7 +2,7 @@ package com.idamobile.platform.chatbot.ws;
 
 import com.github.jtail.jpa.util.EntityUtils;
 import com.github.zjor.telegram.bot.api.Telegram;
-import com.github.zjor.telegram.bot.api.dto.SendMessageRequest;
+import com.github.zjor.telegram.bot.api.dto.methods.SendMessage;
 import com.github.zjor.telegram.bot.framework.model.TelegramUser;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +26,7 @@ public class ManagementServiceImpl implements ManagementService {
     public void announce(String text) {
         List<TelegramUser> users = EntityUtils.find(em, TelegramUser.class).list();
         users.stream().forEach(u -> {
-            SendMessageRequest req = new SendMessageRequest(u.getTelegramId(), text);
+            SendMessage req = new SendMessage(u.getTelegramId(), text);
             telegram.sendMessage(req);
         });
 
