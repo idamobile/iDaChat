@@ -9,6 +9,14 @@
 
        <context:annotation-config/>
 
+       <context:component-scan base-package="com.idamobile.platform.chatbot.service"/>
+       <context:component-scan base-package="com.idamobile.platform.chatbot.facebook.service"/>
+
+       <bean id="facebookBotConfig" class="com.idamobile.platform.chatbot.facebook.FacebookBotConfiguration">
+              <constructor-arg name="verificationToken" value="verify_me"/>
+              <constructor-arg name="pageAccessToken" value="EAAT6ATAqdfEBAMk1tWDEZCWHw6lM816V9hEOt7BZAFq9v8QFlAKGsj2hiw0paoRz32cO2GVRezOnsuyPhBvDDvK7YRE8BkNjuZAZBPc5E8xntumznZBMLS5WnKcRKgrMZCOAjwQPZA7cNZBZCWgp3mgNswQQa1eDhXhoiGqZB0B8gKyAZDZD"/>
+       </bean>
+
        <bean class="com.github.zjor.telegram.bot.api.Telegram">
               <constructor-arg name="token" value="#{botToken}"/>
        </bean>
